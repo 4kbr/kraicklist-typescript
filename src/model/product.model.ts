@@ -1,4 +1,4 @@
-export interface Record {
+export interface Product {
   id: number;
   title: string;
   content: string;

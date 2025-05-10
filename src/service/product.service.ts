@@ -1,4 +1,4 @@
-import searcher from "../helper/searcher";
+import { ProductRepository } from "../repository/product.repository";
 
 export class SearchService {
   static async getAllByQuery(query: string) {
@@ -7,7 +7,7 @@ export class SearchService {
       throw new Error("product not found");
     }
     //todo: find product form db
-    const results = searcher.search(query);
+    const results = ProductRepository.findMany(query);
     //todo: generate and return response
     return results;
   }

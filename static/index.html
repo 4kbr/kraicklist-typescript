@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
-  <body class="bg-gray-100 min-h-screen text-gray-800">
+  <body class="bg-gray-100 min-h-screen text-gray-800 overflow-x-hidden">
     <div class="max-w-4xl mx-auto p-4">
       <h1 class="text-3xl font-bold text-center mb-6">KraickList</h1>
 
@@ -29,7 +29,7 @@
       </form>
 
       <div id="resultWrapper" class="space-y-4">
-        <ul id="resultList" class="grid gap-4"></ul>
+        <ul id="resultList" class="flex flex-wrap gap-4 justify-center"></ul>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
         search: (ev) => {
           ev.preventDefault();
           const data = Object.fromEntries(new FormData(form));
-          fetch(`/search?q=${data.query}`).then(async (response) => {
+          fetch(`/product/search?q=${data.query}`).then(async (response) => {
             const responsePayload = await response.json();
             const results = responsePayload.data;
             console.log("data:", results);
@@ -53,23 +53,23 @@
         updateList: (results) => {
           const rows = results.map((result) => {
             return `
-              <li class="bg-white p-4 rounded shadow-md flex gap-4">
-                <img src="${
-                  result.thumb_url
-                }" alt="Thumbnail" class="w-24 h-24 object-cover rounded" />
-                <div class="flex-1">
-                  <h2 class="text-xl font-semibold">${result.title}</h2>
-                  <p class="text-sm text-gray-600 mt-1">${result.content}</p>
-                  <div class="mt-2 flex flex-wrap gap-1">
-                    ${result.tags
-                      .map(
-                        (tag) =>
-                          `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${tag}</span>`
-                      )
-                      .join("")}
-                  </div>
-                </div>
-              </li>
+  <li class="bg-white p-4 rounded shadow-md flex flex-col w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.333%-1rem)] max-w-sm">
+    <img src="${
+      result.thumb_url
+    }" alt="Thumbnail" class="w-full h-40 object-cover rounded mb-2" />
+    <div class="flex-1 min-w-0">
+      <h2 class="text-lg font-semibold truncate">${result.title}</h2>
+      <p class="text-sm text-gray-600 mt-1 line-clamp-3">${result.content}</p>
+      <div class="mt-2 flex flex-wrap gap-1">
+        ${result.tags
+          .map(
+            (tag) =>
+              `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${tag}</span>`
+          )
+          .join("")}
+      </div>
+    </div>
+  </li>
             `;
           });
           resultList.innerHTML = rows.join("");

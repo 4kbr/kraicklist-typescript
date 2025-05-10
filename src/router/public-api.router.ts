@@ -1,11 +1,11 @@
 // const apiPrefix ... jika perlu
 
 import { Router } from "express";
-import { SearchController } from "../controller/search.controller";
+import productRouter from "./product.router";
 
 export const publicRouter = Router();
 
 //API SEARCH
-const searchPrefix = "/search";
+const productPrefix = "/product";
 // publicRouter.use() pakai ini jika route /search  punya banyak chil
-publicRouter.get(searchPrefix, SearchController.getAll);
+publicRouter.use(productPrefix, productRouter);

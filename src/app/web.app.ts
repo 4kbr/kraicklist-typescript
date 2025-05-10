@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import path from "path";
 import { PORT } from "../env-call";
-import searcher from "../helper/searcher";
+import productHelper from "../helper/product.helper";
 import { publicRouter } from "../router/public-api.router";
 import { statusCode } from "../status-code";
 import { logger } from "./logger.app";
@@ -37,7 +37,7 @@ web.use(publicRouter);
 export const initialWeb = () => {
   web.listen(PORT, async () => {
     logger.info(`running Server on ${PORT}`);
-    await searcher.load("data.gz");
+    await productHelper.load("data.gz");
   });
   //todo: tambahkan function inisiasi lain disini jika ada
 };

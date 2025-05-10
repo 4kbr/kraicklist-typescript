@@ -2,9 +2,12 @@ import fs from "fs";
 import readline from "readline";
 import zlib from "zlib";
 import { logger } from "../app/logger.app";
-import { Record } from "../model/record.model";
+import { Product } from "../model/product.model";
 
-const records: Record[] = [];
+/**
+ * act as database
+ */
+export const products: Product[] = [];
 
 async function load(filePath: string): Promise<void> {
   logger.info("start load file");
@@ -16,26 +19,16 @@ async function load(filePath: string): Promise<void> {
 
   for await (const line of rl) {
     try {
-      const record: Record = JSON.parse(line);
-      records.push(record);
+      const record: Product = JSON.parse(line);
+      products.push(record);
     } catch {
       logger.error(`error on line:`, line);
       continue; // Skip invalid JSON lines
     }
   }
-  logger.info(`succedd load ${records.length} data`);
-}
-
-function search(query: string): Record[] {
-  const q = query.toLowerCase();
-  return records.filter(
-    (record) =>
-      record.title.toLowerCase().includes(q) ||
-      record.content.toLowerCase().includes(q)
-  );
+  logger.info(`succedd load ${products.length} data`);
 }
 
 export default {
   load,
-  search,
 };

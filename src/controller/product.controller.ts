@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { SearchService } from "../service/search.service";
+import { SearchService } from "../service/product.service";
 import { statusCode } from "../status-code";
 
-export class SearchController {
+export class ProductController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query.q as string;
