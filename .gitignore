@@ -1,0 +1,6 @@
+*.txt
+
+logs/
+node_modules/
+public/
+

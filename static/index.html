@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KraickList - Find Your Needs Here</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen text-gray-800">
+    <div class="max-w-4xl mx-auto p-4">
+      <h1 class="text-3xl font-bold text-center mb-6">KraickList</h1>
+
+      <form id="form" class="flex gap-2 mb-6" autocomplete="off">
+        <input
+          type="text"
+          id="query"
+          name="query"
+          placeholder="Search anything..."
+          class="flex-1 p-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </form>
+
+      <div id="resultWrapper" class="space-y-4">
+        <ul id="resultList" class="grid gap-4"></ul>
+      </div>
+    </div>
+
+    <script>
+      const Controller = {
+        search: (ev) => {
+          ev.preventDefault();
+          const data = Object.fromEntries(new FormData(form));
+          fetch(`/search?q=${data.query}`).then(async (response) => {
+            const responsePayload = await response.json();
+            const results = responsePayload.data;
+            console.log("data:", results);
+            if (!results || (Array.isArray(results) && results.length < 1)) {
+              resultList.innerHTML = `<p class="text-center text-gray-500">No results for <strong>${data.query}</strong>.</p>`;
+              return;
+            }
+            Controller.updateList(results);
+          });
+        },
+
+        updateList: (results) => {
+          const rows = results.map((result) => {
+            return `
+              <li class="bg-white p-4 rounded shadow-md flex gap-4">
+                <img src="${
+                  result.thumb_url
+                }" alt="Thumbnail" class="w-24 h-24 object-cover rounded" />
+                <div class="flex-1">
+                  <h2 class="text-xl font-semibold">${result.title}</h2>
+                  <p class="text-sm text-gray-600 mt-1">${result.content}</p>
+                  <div class="mt-2 flex flex-wrap gap-1">
+                    ${result.tags
+                      .map(
+                        (tag) =>
+                          `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${tag}</span>`
+                      )
+                      .join("")}
+                  </div>
+                </div>
+              </li>
+            `;
+          });
+          resultList.innerHTML = rows.join("");
+        },
+      };
+
+      const form = document.getElementById("form");
+      form.addEventListener("submit", Controller.search);
+    </script>
+  </body>
+</html>
