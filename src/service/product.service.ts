@@ -1,6 +1,9 @@
 import { ResponseError } from "../error/response.error";
+import { FilterGetProductRequest } from "../model/product.model";
 import { ProductRepository } from "../repository/product.repository";
 import { statusCode } from "../status-code";
+import { ProductValidation } from "../validation/product.validation";
+import { validate } from "../validation/validate";
 
 export class ProductService {
   static getAllTagsFromProduct(query?: string) {
@@ -23,16 +26,11 @@ export class ProductService {
     }
     return foundProduct;
   }
-  static async getAllByQuery(query: string) {
+  static async getAllByQuery(request: FilterGetProductRequest) {
     //todo: validasi query
-    if (!query) {
-      throw new ResponseError({
-        code: statusCode.requestQueryNotValid,
-        message: `query request not valid, "q" must be exists`,
-      });
-    }
+    const filterRequest = validate(ProductValidation.GET_ALL_SCHEMA, request);
     //todo: find product form db
-    const results = ProductRepository.findMany(query);
+    const results = ProductRepository.findMany(filterRequest);
     //todo: generate and return response
     return results;
   }

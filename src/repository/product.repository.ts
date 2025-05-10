@@ -1,5 +1,5 @@
 import { products } from "../helper/product.helper";
-import { Product } from "../model/product.model";
+import { FilterGetProductRequest, Product } from "../model/product.model";
 
 export class ProductRepository {
   static findAllTags(q?: string): string[] {
@@ -26,14 +26,34 @@ export class ProductRepository {
     const shuffled = tags.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, limit);
   }
-  static findMany(query: string): Product[] {
-    const q = query.toLowerCase();
-    return products.filter(
-      (product) =>
-        product.title.toLowerCase().includes(q) ||
-        product.content.toLowerCase().includes(q)
-    );
+  static findMany(filters: FilterGetProductRequest): Product[] {
+    const { q, tags, limit = 25, page = 0 } = filters;
+
+    let result = products;
+
+    // Filter by keyword (title or content)
+    if (q) {
+      const keyword = q.toLowerCase();
+      result = result.filter(
+        (product) =>
+          product.title.toLowerCase().includes(keyword) ||
+          product.content.toLowerCase().includes(keyword)
+      );
+    }
+
+    // Filter by tags (include ALL tags in the filter)
+    if (tags && tags.length > 0) {
+      result = result.filter((product) =>
+        tags.every((tag) => product.tags.includes(tag))
+      );
+    }
+
+    // Apply pagination
+    const start = page * limit;
+    const end = start + limit;
+    return result.slice(start, end);
   }
+
   static findById(id: number | string): Product | undefined {
     return products.find((product) => product.id === Number(id));
   }

@@ -18,6 +18,8 @@ This API is for showing all unique tags from each product
 🔸 (DONE) API get random tags
 This API is for showing some tags under search bar
 
+🔸 (DONE) API implement pagination and search by tags in get products
+
 ## 2. Improve Result Presentation (UX)
 
 🔸 (ONPROGRESS) Better Styling

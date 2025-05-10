@@ -4,6 +4,7 @@ type ResponseErrorParams = {
   code: StatusCode;
   statusHTTP?: number;
   message: string;
+  [key: string]: any;
 };
 
 export class ResponseError extends Error {

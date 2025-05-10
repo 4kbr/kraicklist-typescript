@@ -15,10 +15,11 @@ export const errorMiddleware = async (
   if (res.headersSent) return;
   try {
     if (error instanceof ResponseError) {
-      const { code, message, statusHTTP } = error.props;
+      const { code, message, statusHTTP, ...others } = error.props;
       res.status(statusHTTP || 400).json({
         code,
         message,
+        others,
       });
       //todo: optional lainnya
     } else {

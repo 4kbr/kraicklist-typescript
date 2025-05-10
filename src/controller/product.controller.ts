@@ -49,7 +49,7 @@ export class ProductController {
   }
   static async getAll(req: Request, res: ApiResponse, next: NextFunction) {
     try {
-      const query = req.query.q as string;
+      const query = req.query;
       const response = await ProductService.getAllByQuery(query);
 
       res.status(200).json({

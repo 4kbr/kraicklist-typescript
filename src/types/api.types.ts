@@ -6,4 +6,5 @@ export type ApiResponse = Response<{
   code: StatusCode;
   message?: string;
   data?: any;
+  [key: string]: any;
 }>;
