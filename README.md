@@ -1,3 +1,7 @@
+# installation & running program
+
+yarn install&&yarn build&&yarn start
+
 # KraickList
 
 Welcome to Haraj take home challenge!
