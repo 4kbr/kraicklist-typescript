@@ -12,10 +12,10 @@ Fix: Convert both query and content/title to lowercase.
 Currently there are no API to get specific product.
 Fix: Add API to get product By id.
 
-🔸 (ONPROGRESS) API get all unique tags
+🔸 (DONE) API get all unique tags and can search with query
 This API is for showing all unique tags from each product
 
-🔸 (ONPROGRESS) API get random tags
+🔸 (DONE) API get random tags
 This API is for showing some tags under search bar
 
 ## 2. Improve Result Presentation (UX)
@@ -24,11 +24,11 @@ This API is for showing some tags under search bar
 Currently likely raw HTML / rough layout
 Fix: Use CSS Grid / Flexbox, cards with thumbnail (thumb_url), truncated text, etc.
 
-🔸 (ONPROGRESS) Empty State Handling
+🔸 (DONE) Empty State Handling
 Users should get friendly feedback when no results
 Fix: Add No results for "query" UI instead of alert()
 
-🔸 (ONPROGRESS) Loading State
+🔸 (HOLD) Loading State
 UX improvement during async fetch
 Fix: Add loading spinner or disabled button while fetching
 

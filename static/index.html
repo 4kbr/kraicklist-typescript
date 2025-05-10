@@ -27,6 +27,7 @@
           Search
         </button>
       </form>
+      <div id="highlightTags" class="flex flex-wrap gap-2 mb-6"></div>
 
       <div id="resultWrapper" class="space-y-4">
         <ul id="resultList" class="flex flex-wrap gap-4 justify-center"></ul>
@@ -34,50 +35,115 @@
     </div>
 
     <script>
+      const form = document.getElementById("form");
+      const resultList = document.getElementById("resultList");
+      const highlightTags = document.getElementById("highlightTags");
+
       const Controller = {
-        search: (ev) => {
-          ev.preventDefault();
-          const data = Object.fromEntries(new FormData(form));
-          fetch(`/product/search?q=${data.query}`).then(async (response) => {
-            const responsePayload = await response.json();
-            const results = responsePayload.data;
-            console.log("data:", results);
-            if (!results || (Array.isArray(results) && results.length < 1)) {
-              resultList.innerHTML = `<p class="text-center text-gray-500">No results for <strong>${data.query}</strong>.</p>`;
-              return;
-            }
-            Controller.updateList(results);
-          });
+        init() {
+          form.addEventListener("submit", Controller.search);
+          Controller.loadHighlightTags();
+          Controller.handleSearchFromURL();
+          window.addEventListener("popstate", Controller.handleSearchFromURL);
         },
 
-        updateList: (results) => {
+        search(ev) {
+          ev.preventDefault();
+          const data = Object.fromEntries(new FormData(form));
+          if (data.query?.trim()) {
+            history.pushState(null, "", `?q=${encodeURIComponent(data.query)}`);
+            Controller.fetchAndRender();
+          }
+        },
+        handleTagClick(tag) {
+          history.pushState(null, "", `?tags=${encodeURIComponent(tag)}`);
+          Controller.fetchAndRender();
+        },
+
+        handleSearchFromURL() {
+          Controller.fetchAndRender();
+        },
+
+        fetchAndRender() {
+          const params = new URLSearchParams(location.search);
+          const q = params.get("q");
+          const tag = params.get("tags");
+
+          let url = "";
+          if (q) {
+            url = `/product/search?q=${encodeURIComponent(q)}`;
+          } else if (tag) {
+            url = `/product/search?tags=${encodeURIComponent(tag)}`;
+          } else {
+            resultList.innerHTML = "";
+            return;
+          }
+
+          fetch(url)
+            .then((res) => res.json())
+            .then((res) => {
+              const results = res.data;
+              if (!results || results.length === 0) {
+                resultList.innerHTML = `<p class="text-center text-gray-500">No results found.</p>`;
+                return;
+              }
+              Controller.updateList(results);
+            });
+        },
+
+        updateList(results) {
           const rows = results.map((result) => {
             return `
-  <li class="bg-white p-4 rounded shadow-md flex flex-col w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.333%-1rem)] max-w-sm">
-    <img src="${
-      result.thumb_url
-    }" alt="Thumbnail" class="w-full h-40 object-cover rounded mb-2" />
-    <div class="flex-1 min-w-0">
-      <h2 class="text-lg font-semibold truncate">${result.title}</h2>
-      <p class="text-sm text-gray-600 mt-1 line-clamp-3">${result.content}</p>
-      <div class="mt-2 flex flex-wrap gap-1">
-        ${result.tags
-          .map(
-            (tag) =>
-              `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${tag}</span>`
-          )
-          .join("")}
-      </div>
-    </div>
-  </li>
-            `;
+          <li class="bg-white p-4 rounded shadow-md flex flex-col w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.333%-1rem)] max-w-sm">
+            <img src="${
+              result.thumb_url
+            }" alt="Thumbnail" class="w-full h-40 object-cover rounded mb-2" />
+            <div class="flex-1 min-w-0">
+              <h2 class="text-lg font-semibold truncate">
+                <a href="/products/${result.id}.html" class="hover:underline">${
+              result.title
+            }</a>
+              </h2>
+              <p class="text-sm text-gray-600 mt-1 line-clamp-3">${
+                result.content
+              }</p>
+              <div class="mt-2 flex flex-wrap gap-1">
+                ${result.tags
+                  .map(
+                    (tag) => `
+                    <span onclick="Controller.handleTagClick('${tag}')" 
+                      class="cursor-pointer text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded hover:bg-blue-200">
+                      #${tag}
+                    </span>`
+                  )
+                  .join("")}
+              </div>
+            </div>
+          </li>
+        `;
           });
           resultList.innerHTML = rows.join("");
         },
+
+        loadHighlightTags() {
+          fetch("/product/tags-random")
+            .then((res) => res.json())
+            .then((res) => {
+              const tags = res.data || [];
+              highlightTags.innerHTML = tags
+                .map(
+                  (tag) => `
+              <button onclick="Controller.handleTagClick('${tag}')" 
+                class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded hover:bg-green-200 transition">
+                #${tag}
+              </button>`
+                )
+                .join(" ");
+            });
+        },
       };
 
-      const form = document.getElementById("form");
-      form.addEventListener("submit", Controller.search);
+      Controller.init();
     </script>
   </body>
 </html>
