@@ -59,8 +59,10 @@
               "",
               `?q=${encodeURIComponent(data.query)}&page=0`
             );
-            Controller.fetchAndRender();
+          } else {
+            history.pushState(null, "", `?page=0`);
           }
+          Controller.fetchAndRender();
         },
 
         handleTagClick(tag) {
@@ -100,7 +102,7 @@
           urlParams.set("page", page.toString());
           urlParams.set("limit", PAGE_SIZE.toString()); // Menambahkan limit = 10
 
-          fetch(`/product/search?${urlParams.toString()}`)
+          fetch(`/api/product/search?${urlParams.toString()}`)
             .then((res) => res.json())
             .then((res) => {
               const { total, data } = res.data;
@@ -180,9 +182,9 @@
                 }" alt="Thumbnail" class="w-full h-40 object-cover rounded mb-2" />
                 <div class="flex-1 min-w-0">
                   <h2 class="text-lg font-semibold truncate">
-                    <a href="/products/${
+                    <a href="/product?id=${
                       result.id
-                    }.html" class="hover:underline">${result.title}</a>
+                    }" class="hover:underline">${result.title}</a>
                   </h2>
                   <p class="text-sm text-gray-600 mt-1 line-clamp-3">${
                     result.content
@@ -206,7 +208,7 @@
         },
 
         loadHighlightTags() {
-          fetch("/product/tags-random")
+          fetch("/api/product/tags-random")
             .then((res) => res.json())
             .then((res) => {
               const tags = res.data || [];

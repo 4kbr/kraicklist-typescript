@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+    <div class="max-w-5xl mx-auto p-6">
+      <!-- Main image -->
+      <div class="mb-6">
+        <img
+          id="mainImage"
+          class="w-full rounded-lg object-cover h-[400px] md:h-[500px]"
+          src=""
+          alt="Product Image"
+        />
+      </div>
+
+      <!-- Thumbnails -->
+      <div id="thumbnails" class="flex space-x-2 overflow-x-auto mb-6"></div>
+
+      <!-- Product info -->
+      <div class="space-y-4">
+        <h1 id="productTitle" class="text-2xl md:text-3xl font-bold"></h1>
+        <p id="productContent" class="whitespace-pre-line text-gray-700"></p>
+
+        <!-- Tags -->
+        <div id="productTags" class="flex flex-wrap gap-2 mt-4"></div>
+
+        <!-- Footer Info -->
+        <div id="productUpdate" class="text-sm text-gray-500 mt-6"></div>
+      </div>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+
+      const mainImage = document.getElementById("mainImage");
+      const productTitle = document.getElementById("productTitle");
+      const productContent = document.getElementById("productContent");
+      const productTags = document.getElementById("productTags");
+      const productUpdate = document.getElementById("productUpdate");
+      const thumbnails = document.getElementById("thumbnails");
+      let activeImage = "";
+
+      if (id) {
+        fetch(`/api/product/search/${id}`)
+          .then((res) => res.json())
+          .then((res) => {
+            const data = res.data;
+            mainImage.src = data.image_urls[0];
+            activeImage = data.image_urls[0];
+
+            productTitle.textContent = data.title;
+            productContent.textContent = data.content;
+
+            // Tags
+            productTags.innerHTML = "";
+            data.tags.forEach((tag) => {
+              // const span = document.createElement("span");
+              // span.textContent = tag;
+              // span.className =
+              //   "bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded";
+              // productTags.appendChild(span);
+              const a = document.createElement("a");
+              a.href = `/?tags[]=${encodeURIComponent(tag)}`;
+              a.textContent = tag;
+              a.className =
+                "bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded hover:bg-blue-200 transition";
+              productTags.appendChild(a);
+            });
+
+            // Update time
+            const updated = new Date(data.updated_at * 1000);
+            productUpdate.textContent = `Last updated at: ${updated.toLocaleDateString()} ${updated.toLocaleTimeString()}`;
+
+            // Thumbnails
+            thumbnails.innerHTML = "";
+            data.image_urls.forEach((url) => {
+              const img = document.createElement("img");
+              img.src = url;
+              img.className =
+                "h-20 w-20 rounded cursor-pointer object-cover border hover:border-blue-500";
+              img.onclick = () => {
+                mainImage.src = url;
+                activeImage = url;
+              };
+              thumbnails.appendChild(img);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching product:", error);
+          });
+      } else {
+        console.warn("No ID found in the URL.");
+      }
+    </script>
+  </body>
+</html>

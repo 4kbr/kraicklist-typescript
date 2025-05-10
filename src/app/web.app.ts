@@ -26,6 +26,10 @@ web.use(express.urlencoded({ extended: true, limit: "10MB" }));
 //todo: tambahkan middleware jika perlu authentitkasi
 
 web.use("/", express.static(path.join(__dirname, "../../static")));
+web.use(
+  "/product",
+  express.static(path.join(__dirname, "../../static/product.html"))
+);
 
 web.get("/check", (req: Request, res: Response) => {
   res.status(200).json({

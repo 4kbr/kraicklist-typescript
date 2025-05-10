@@ -5,6 +5,7 @@ import productRouter from "./product.router";
 
 export const publicRouter = Router();
 
+const prefixAPI = "/api";
 //API SEARCH
-const productPrefix = "/product";
+const productPrefix = prefixAPI + "/product";
 publicRouter.use(productPrefix, productRouter);
