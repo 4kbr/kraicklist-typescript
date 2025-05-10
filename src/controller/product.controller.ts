@@ -1,4 +1,5 @@
 import { NextFunction, Request } from "express";
+import qs from "qs";
 import { ProductService } from "../service/product.service";
 import { statusCode } from "../status-code";
 import { ApiResponse } from "../types/api.types";
@@ -50,7 +51,10 @@ export class ProductController {
   static async getAll(req: Request, res: ApiResponse, next: NextFunction) {
     try {
       const query = req.query;
-      const response = await ProductService.getAllByQuery(query);
+      const rawUrl = req.url;
+      const parsedQuery = qs.parse(rawUrl.split("?")[1]);
+
+      const response = await ProductService.getAllByQuery(parsedQuery);
 
       res.status(200).json({
         code: statusCode.success,

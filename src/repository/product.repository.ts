@@ -26,7 +26,10 @@ export class ProductRepository {
     const shuffled = tags.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, limit);
   }
-  static findMany(filters: FilterGetProductRequest): Product[] {
+  static findMany(filters: FilterGetProductRequest): {
+    total: number;
+    data: Product[];
+  } {
     const { q, tags, limit = 25, page = 0 } = filters;
 
     let result = products;
@@ -51,7 +54,10 @@ export class ProductRepository {
     // Apply pagination
     const start = page * limit;
     const end = start + limit;
-    return result.slice(start, end);
+    return {
+      total: result.length,
+      data: result.slice(start, end),
+    };
   }
 
   static findById(id: number | string): Product | undefined {

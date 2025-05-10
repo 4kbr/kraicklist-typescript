@@ -20,6 +20,8 @@ This API is for showing some tags under search bar
 
 🔸 (DONE) API implement pagination and search by tags in get products
 
+🔸 (NOTYET) Menambah filter dengan task
+
 ## 2. Improve Result Presentation (UX)
 
 🔸 (ONPROGRESS) Better Styling
@@ -34,6 +36,9 @@ Fix: Add No results for "query" UI instead of alert()
 UX improvement during async fetch
 Fix: Add loading spinner or disabled button while fetching
 
-🔸 (ONPROGRESS) Pagination or Infinite Scroll
-Avoid overwhelming user with too many results
+🔸 (DONE) Pagination
+Avoid overwhelming user with too many reults
 Fix: Slice the results on client side or implement paging in backend
+
+🔸 (ONGOING) Product page
+Page for one product

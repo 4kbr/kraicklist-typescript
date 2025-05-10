@@ -29,6 +29,7 @@ export class ProductService {
   static async getAllByQuery(request: FilterGetProductRequest) {
     //todo: validasi query
     const filterRequest = validate(ProductValidation.GET_ALL_SCHEMA, request);
+
     //todo: find product form db
     const results = ProductRepository.findMany(filterRequest);
     //todo: generate and return response
