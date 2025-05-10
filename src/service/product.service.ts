@@ -3,6 +3,15 @@ import { ProductRepository } from "../repository/product.repository";
 import { statusCode } from "../status-code";
 
 export class ProductService {
+  static getAllTagsFromProduct(query?: string) {
+    //todo: find product
+    return ProductRepository.findAllTags(query);
+  }
+  static async getRandomTagsFromProduct() {
+    const foundTags = await ProductRepository.findRandomTags(5);
+
+    return foundTags;
+  }
   static async getProductById(productId: string) {
     //todo: find product
     const foundProduct = await ProductRepository.findById(productId);

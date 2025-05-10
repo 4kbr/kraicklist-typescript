@@ -9,8 +9,14 @@ Current behavior: case-sensitive exact match
 Fix: Convert both query and content/title to lowercase.
 
 🔸 (DONE) API get product by id
-Currently there are not API to get specific product.
+Currently there are no API to get specific product.
 Fix: Add API to get product By id.
+
+🔸 (ONPROGRESS) API get all unique tags
+This API is for showing all unique tags from each product
+
+🔸 (ONPROGRESS) API get random tags
+This API is for showing some tags under search bar
 
 ## 2. Improve Result Presentation (UX)
 

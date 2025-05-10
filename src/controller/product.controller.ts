@@ -4,6 +4,35 @@ import { statusCode } from "../status-code";
 import { ApiResponse } from "../types/api.types";
 
 export class ProductController {
+  static async getAllTags(req: Request, res: ApiResponse, next: NextFunction) {
+    try {
+      const query = req.query.q as string;
+      const response = await ProductService.getAllTagsFromProduct(query);
+      res.status(200).json({
+        code: statusCode.success,
+        data: response,
+      });
+    } catch (error) {
+      //todo: lempar ke error middleware
+      next(error);
+    }
+  }
+  static async getRandomTags(
+    req: Request,
+    res: ApiResponse,
+    next: NextFunction
+  ) {
+    try {
+      const response = await ProductService.getRandomTagsFromProduct();
+      res.status(200).json({
+        code: statusCode.success,
+        data: response,
+      });
+    } catch (error) {
+      //todo: lempar ke error middleware
+      next(error);
+    }
+  }
   static async getById(req: Request, res: ApiResponse, next: NextFunction) {
     try {
       const productId = req.params.productId;
