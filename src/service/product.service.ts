@@ -1,10 +1,26 @@
+import { ResponseError } from "../error/response.error";
 import { ProductRepository } from "../repository/product.repository";
+import { statusCode } from "../status-code";
 
-export class SearchService {
+export class ProductService {
+  static async getProductById(productId: string) {
+    //todo: find product
+    const foundProduct = await ProductRepository.findById(productId);
+    if (!foundProduct) {
+      throw new ResponseError({
+        code: statusCode.productNotFound,
+        message: "product not found",
+      });
+    }
+    return foundProduct;
+  }
   static async getAllByQuery(query: string) {
     //todo: validasi query
     if (!query) {
-      throw new Error("product not found");
+      throw new ResponseError({
+        code: statusCode.requestQueryNotValid,
+        message: `query request not valid, "q" must be exists`,
+      });
     }
     //todo: find product form db
     const results = ProductRepository.findMany(query);

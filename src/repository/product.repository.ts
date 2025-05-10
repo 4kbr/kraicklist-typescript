@@ -10,4 +10,7 @@ export class ProductRepository {
         product.content.toLowerCase().includes(q)
     );
   }
+  static findById(id: number | string): Product | undefined {
+    return products.find((product) => product.id === Number(id));
+  }
 }

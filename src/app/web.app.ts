@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { PORT } from "../env-call";
 import productHelper from "../helper/product.helper";
+import { errorMiddleware } from "../middleware/error.middleware";
 import { publicRouter } from "../router/public-api.router";
 import { statusCode } from "../status-code";
 import { logger } from "./logger.app";
@@ -33,6 +34,9 @@ web.get("/check", (req: Request, res: Response) => {
 });
 
 web.use(publicRouter);
+
+//todo: middleware error
+web.use(errorMiddleware);
 
 export const initialWeb = () => {
   web.listen(PORT, async () => {

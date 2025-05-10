@@ -2,11 +2,15 @@
 
 > Note: the list that is (DONE) means it is done.
 
-## 1. Improve Search Functionality (Top Priority)
+## 1. Improve API Functionality
 
 🔸 (DONE) Case-insensitive Search
 Current behavior: case-sensitive exact match
 Fix: Convert both query and content/title to lowercase.
+
+🔸 (DONE) API get product by id
+Currently there are not API to get specific product.
+Fix: Add API to get product By id.
 
 ## 2. Improve Result Presentation (UX)
 
